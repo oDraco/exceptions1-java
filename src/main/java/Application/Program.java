@@ -4,7 +4,6 @@ import Model.Entities.Reservation;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -14,7 +13,7 @@ public class Program {
         Scanner sc = new Scanner(System.in);
         DateTimeFormatter defaultFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        Integer roomNumber;
+        int roomNumber;
         LocalDate checkIn, checkOut;
 
         System.out.print("Room Number: ");
@@ -40,13 +39,10 @@ public class Program {
             System.out.print("Check-out (DD/MM/YYYY): ");
             checkOut = LocalDate.parse(sc.nextLine(), defaultFormatter);
 
-            LocalDate today = LocalDate.now();
-            if(checkIn.isBefore(today) || checkOut.isBefore(today)) {
-                System.out.print("Error in reservation: Reservation dates for update must be future dates.");
-            } else if(checkIn.isAfter(checkOut)){
-                System.out.println("Error in reservation: Check-out date must be after check-in date.");
+            String error = reservation.updateDates(checkIn,checkOut);
+            if(error != null) {
+                System.out.println("Error in reservation: " + error);
             } else {
-                reservation.updateDates(checkIn,checkOut);
                 System.out.println("Reservation: " + reservation);
             }
         }
